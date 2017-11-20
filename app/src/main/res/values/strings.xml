@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hailing Frequencies</string>
+    <string name="logout">Log out</string>
 </resources>
