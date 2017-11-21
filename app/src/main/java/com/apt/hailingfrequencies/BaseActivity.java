@@ -5,6 +5,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.firebase.ui.auth.AuthUI;
+
 
 // Base class inspired by
 // https://stackoverflow.com/questions/3270206/same-option-menu-in-all-activities-in-android/3270254#3270254
@@ -25,7 +27,7 @@ public class BaseActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                // do what you want here
+                AuthUI.getInstance().signOut(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

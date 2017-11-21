@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "153356807079",
+    "firebase_url": "https://hailing-frequencies-2017.firebaseio.com",
+    "project_id": "hailing-frequencies-2017",
+    "storage_bucket": "hailing-frequencies-2017.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153356807079:android:2d5ea08d457ce761",
+        "android_client_info": {
+          "package_name": "com.apt.hailingfrequencies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153356807079-ti22jbf870bo9cteck3inrvr83ig9rai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apt.hailingfrequencies",
+            "certificate_hash": "ea20eeb23121d0d585fb466d56911aedc76dffe1"
+          }
+        },
+        {
+          "client_id": "153356807079-741pghjp3m1o5nh40tpsohh8v2k2uabm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxDpoFccNLfctQCcyRWVtrrjx1FBjKieA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153356807079-741pghjp3m1o5nh40tpsohh8v2k2uabm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
