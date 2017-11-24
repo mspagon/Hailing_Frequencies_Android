@@ -8,7 +8,13 @@ public class Conversation {
     private List<User> userList;
 
     public Conversation() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
 
+    public Conversation(String title, List<Message> messageList, List<User> userList) {
+        this.title = title;
+        this.messageList = messageList;
+        this.userList = userList;
     }
 
     public String getTitle() {

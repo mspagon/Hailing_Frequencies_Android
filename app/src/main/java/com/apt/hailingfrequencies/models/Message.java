@@ -11,6 +11,17 @@ public class Message {
 
     }
 
+    public Message(String name, String text) {
+        this.name = name;
+        this.text = text;
+    }
+
+    public Message(String name, String photoUrl, String text) {
+        this.name = name;
+        this.photoUrl = photoUrl;
+        this.text = text;
+    }
+
     public String getName() {
         return name;
     }
