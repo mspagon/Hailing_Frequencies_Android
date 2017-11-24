@@ -1,10 +1,11 @@
-package com.apt.hailingfrequencies;
+package com.apt.hailingfrequencies.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.apt.hailingfrequencies.R;
 import com.firebase.ui.auth.AuthUI;
 
 
