@@ -51,23 +51,16 @@ public class CreateConvoActivity extends BaseActivity {
         // Firebase Auth State Listener
         createFirebaseAuthListener();
 
-        final Button buttonCreateConvo = (Button) findViewById(R.id.button_create_convo);
-        buttonCreateConvo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postConversation();
-            }
-
-        });
+        attachButtonClickListener();
 
     }
 
-    public void postConversation() {
+    public void createConversation() {
         EditText convoNameEditText;
-        convoNameEditText = (EditText)findViewById(R.id.edittext_convo_name);
+        convoNameEditText = (EditText) findViewById(R.id.edittext_convo_name);
 
         String convoName = convoNameEditText.getText().toString();
-        List<Message> myMessages= new ArrayList<Message>();
+        List<Message> myMessages = new ArrayList<Message>();
 
         List<User> myUsers = new ArrayList<User>();
 
@@ -84,11 +77,9 @@ public class CreateConvoActivity extends BaseActivity {
         myMessages.add(m2);
 
 
-
         Conversation myConversation = new Conversation(convoName, myMessages, myUsers);
 
         mConversationDatabaseReference.push().setValue(myConversation);
-
     }
 
 
@@ -99,51 +90,30 @@ public class CreateConvoActivity extends BaseActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // user is signed in
-                    onSignedInInitialize(user.getDisplayName());
+                    mUsername = user.getDisplayName();
                 } else {
                     // user is signed out
                     onSignedOutCleanup();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    //TODO remove smart lock in the future
-                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(
-                                            Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                                    .build(),
-                            RC_SIGN_IN);
                 }
             }
         };
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(CreateConvoActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(CreateConvoActivity.this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-
-        // attach database read listener
-        // (get all the conversations and stuff from database.)
-
-    }
-
     private void onSignedOutCleanup() {
+        // redirect to main activity and let it handle login.
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
-        // Clear conversation adapter.
-        // and detach database read listener
-        // https://classroom.udacity.com/courses/ud0352/lessons/daa58d76-0146-4c52-b5d8-45e32a3dfb08/concepts/bc33923b-5328-4edd-96f4-6acc47c8429f
+    private void attachButtonClickListener() {
+        final Button buttonCreateConvo = (Button) findViewById(R.id.button_create_convo);
+        buttonCreateConvo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createConversation();
+            }
+
+        });
     }
 
     @Override
@@ -163,15 +133,4 @@ public class CreateConvoActivity extends BaseActivity {
     }
 
 
-
-
-
-
-
 }
-
-
-//
-//    private String title;
-//    private List<Message> messageList;
-//    private List<User> userList;
