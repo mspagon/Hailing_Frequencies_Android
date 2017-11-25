@@ -77,9 +77,9 @@ public class CreateConvoActivity extends BaseActivity {
         myMessages.add(m2);
 
 
-        Conversation myConversation = new Conversation(convoName, myMessages, myUsers);
+//        Conversation myConversation = new Conversation(convoName, myMessages, myUsers);
 
-        mConversationDatabaseReference.push().setValue(myConversation);
+//        mConversationDatabaseReference.push().setValue(myConversation);
     }
 
 
