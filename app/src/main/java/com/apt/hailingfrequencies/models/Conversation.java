@@ -3,7 +3,7 @@ package com.apt.hailingfrequencies.models;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class Conversation{
+public class Conversation {
     private String title;
     private User admin;
     private Message lastMessage;
@@ -15,6 +15,7 @@ public class Conversation{
     public Conversation(String title, User admin) {
         this.title = title;
         this.admin = admin;
+        this.lastMessage = null;
     }
 
     public String getTitle() {

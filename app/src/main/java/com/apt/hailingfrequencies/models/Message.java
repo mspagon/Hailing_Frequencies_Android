@@ -4,7 +4,7 @@ package com.apt.hailingfrequencies.models;
 import java.sql.Timestamp;
 
 public class Message {
-    private String name;
+    private String username;
     private String photoUrl;
     private String text;
     private Timestamp time;
@@ -14,18 +14,18 @@ public class Message {
 
     }
 
-    public Message(String name, String text) {
-        this.name = name;
+    public Message(String username, String text) {
+        this.username = username;
         this.text = text;
         setCurrentTime();
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPhotoUrl() {

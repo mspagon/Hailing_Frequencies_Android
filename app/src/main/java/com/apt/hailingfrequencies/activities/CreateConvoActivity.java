@@ -26,7 +26,6 @@ import java.util.List;
 public class CreateConvoActivity extends BaseActivity {
 
     // Request Code
-    public static final int RC_SIGN_IN = 1;
     public static final String ANONYMOUS = "anonymous";
 
     private String mUsername;
@@ -36,6 +35,8 @@ public class CreateConvoActivity extends BaseActivity {
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private DatabaseReference mConversationDatabaseReference;
+    private DatabaseReference mConvMessagesDatabaseReference;
+    private DatabaseReference mConvUsersDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,35 +47,34 @@ public class CreateConvoActivity extends BaseActivity {
 
         // Initialize Firebase components
         mConversationDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Conversation");
+        mConvMessagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child("ConvMessages");
+        mConvUsersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("ConvUsers");
+
+        // TODO testing user store and retreive here.
+
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         // Firebase Auth State Listener
         createFirebaseAuthListener();
 
         attachButtonClickListener();
-
     }
 
+
+    // Creates three new database objects associated with the creation of a conversation:
+    // 1) The conversation itself (Conversation)
+    // 2) The messages within the conversation (ConvMessages)
+    // 3) The users that in the conversation. (ConvUsers)
+
     public void createConversation() {
+        // get conversation name from editText
         EditText convoNameEditText;
         convoNameEditText = (EditText) findViewById(R.id.edittext_convo_name);
-
         String convoName = convoNameEditText.getText().toString();
-        List<Message> myMessages = new ArrayList<Message>();
 
-        List<User> myUsers = new ArrayList<User>();
+        // Create a new Conversation object
 
-        // create a new user.
-        User user1 = new User(mUsername);
-        User user2 = new User("John Doe");
-        myUsers.add(user1);
-        myUsers.add(user2);
 
-        Message m1 = new Message("John Doe", "Hello");
-        Message m2 = new Message(mUsername, "Hi back!");
-
-        myMessages.add(m1);
-        myMessages.add(m2);
 
 
 //        Conversation myConversation = new Conversation(convoName, myMessages, myUsers);
@@ -112,7 +112,6 @@ public class CreateConvoActivity extends BaseActivity {
             public void onClick(View v) {
                 createConversation();
             }
-
         });
     }
 
@@ -131,6 +130,4 @@ public class CreateConvoActivity extends BaseActivity {
         // Attach auth state listener.
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
-
-
 }
