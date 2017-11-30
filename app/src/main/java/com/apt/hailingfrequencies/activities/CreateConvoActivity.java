@@ -25,14 +25,10 @@ import java.util.List;
 
 public class CreateConvoActivity extends BaseActivity {
 
-    // Request Code
-    public static final String ANONYMOUS = "anonymous";
-
     private String mUsername;
 
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private DatabaseReference mConversationDatabaseReference;
     private DatabaseReference mConvMessagesDatabaseReference;
@@ -74,6 +70,8 @@ public class CreateConvoActivity extends BaseActivity {
 
         // Create a new Conversation object
 
+        //Log.v("TAG", "blah);
+
 
 
 
@@ -82,28 +80,6 @@ public class CreateConvoActivity extends BaseActivity {
 //        mConversationDatabaseReference.push().setValue(myConversation);
     }
 
-
-    private void createFirebaseAuthListener() {
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // user is signed in
-                    mUsername = user.getDisplayName();
-                } else {
-                    // user is signed out
-                    onSignedOutCleanup();
-                }
-            }
-        };
-    }
-
-    private void onSignedOutCleanup() {
-        // redirect to main activity and let it handle login.
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
 
     private void attachButtonClickListener() {
         final Button buttonCreateConvo = (Button) findViewById(R.id.button_create_convo);
@@ -119,8 +95,8 @@ public class CreateConvoActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         // Remove auth state listener.
-        if (mAuthStateListener != null) {
-            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        if (getAuthStateListener() != null) {
+            mFirebaseAuth.removeAuthStateListener(getAuthStateListener());
         }
     }
 
@@ -128,6 +104,6 @@ public class CreateConvoActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         // Attach auth state listener.
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+        mFirebaseAuth.addAuthStateListener(getAuthStateListener());
     }
 }
