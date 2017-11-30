@@ -22,9 +22,6 @@ public class MainActivity extends BaseActivity {
     private String mUsername;
     private String mIdToken;
 
-    // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +30,6 @@ public class MainActivity extends BaseActivity {
 
         // Set username to ANONYMOUS
         mUsername = ANONYMOUS;
-
-        // Initialize Firebase components
-        mFirebaseAuth = FirebaseAuth.getInstance();
 
         // Firebase Auth State Listener
         createFirebaseAuthListener();
@@ -59,7 +53,7 @@ public class MainActivity extends BaseActivity {
         super.onPause();
         // Remove auth state listener.
         if (getAuthStateListener() != null) {
-            mFirebaseAuth.removeAuthStateListener(getAuthStateListener());
+            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
         }
     }
 
@@ -67,7 +61,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         // Attach auth state listener.
-        mFirebaseAuth.addAuthStateListener(getAuthStateListener());
+        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
     }
 
 }

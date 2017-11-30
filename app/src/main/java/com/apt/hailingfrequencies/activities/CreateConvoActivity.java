@@ -27,9 +27,6 @@ public class CreateConvoActivity extends BaseActivity {
 
     private String mUsername;
 
-    // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
-
     private DatabaseReference mConversationDatabaseReference;
     private DatabaseReference mConvMessagesDatabaseReference;
     private DatabaseReference mConvUsersDatabaseReference;
@@ -47,8 +44,6 @@ public class CreateConvoActivity extends BaseActivity {
         mConvUsersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("ConvUsers");
 
         // TODO testing user store and retreive here.
-
-        mFirebaseAuth = FirebaseAuth.getInstance();
 
         // Firebase Auth State Listener
         createFirebaseAuthListener();
@@ -73,8 +68,6 @@ public class CreateConvoActivity extends BaseActivity {
         //Log.v("TAG", "blah);
 
 
-
-
 //        Conversation myConversation = new Conversation(convoName, myMessages, myUsers);
 
 //        mConversationDatabaseReference.push().setValue(myConversation);
@@ -96,7 +89,7 @@ public class CreateConvoActivity extends BaseActivity {
         super.onPause();
         // Remove auth state listener.
         if (getAuthStateListener() != null) {
-            mFirebaseAuth.removeAuthStateListener(getAuthStateListener());
+            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
         }
     }
 
@@ -104,6 +97,19 @@ public class CreateConvoActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         // Attach auth state listener.
-        mFirebaseAuth.addAuthStateListener(getAuthStateListener());
+        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(CreateConvoActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(CreateConvoActivity.this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 }
