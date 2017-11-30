@@ -24,7 +24,11 @@ public class BaseActivity extends AppCompatActivity {
     // Request Code
     public static final int RC_SIGN_IN = 1;
     public static final String ANONYMOUS = "anonymous";
+
+    // HTTP endpoints
     public static final String ENDPOINT = "http://hailing-frequencies-2017.appspot.com/";
+    public static final String ENDPOINT_CONVERSATIONS = ENDPOINT + "api/conversations/";
+    public static final String ENDPOINT_USERS = ENDPOINT + "api/users/";
 
     private String mUsername;
 

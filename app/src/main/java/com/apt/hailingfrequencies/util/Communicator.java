@@ -1,12 +1,8 @@
 package com.apt.hailingfrequencies.util;
 
-
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,9 +12,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.function.Consumer;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -26,7 +20,7 @@ public class Communicator {
     public static final String PUT = "put";
     public static final String GET = "get";
 
-    public void getTokenAndPerformHTTPRequest(final String URL, final String VERB) {
+    public void getTokenAndPerformHTTPRequest(final String URL, final String VERB, final StringHandler HANDLER) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Task task = user.getIdToken(true);
 
@@ -37,7 +31,7 @@ public class Communicator {
                     String idToken = task.getResult().getToken();
                     Log.v("MY TOKEN", idToken);
                     // Send token to your backend via HTTPS
-                    HTTPRequest(idToken, URL, VERB);
+                    HTTPRequest(idToken, URL, VERB, HANDLER);
                 } else {
                     // Handle error -> task.getException();
                     Exception exception = task.getException();
@@ -48,7 +42,7 @@ public class Communicator {
 
     // Using Android Async Http Client
     // https://github.com/codepath/android_guides/wiki/Using-Android-Async-Http-Client
-    public void HTTPRequest(String token, String url, String verb) {
+    public void HTTPRequest(String token, String url, String verb, final StringHandler handler) {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         client.addHeader("Authorization", "Bearer " + token);

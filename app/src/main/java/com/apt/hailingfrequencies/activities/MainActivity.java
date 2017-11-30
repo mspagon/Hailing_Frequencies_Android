@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.util.Communicator;
+import com.apt.hailingfrequencies.util.StringHandler;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +32,13 @@ public class MainActivity extends BaseActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Communicator myCommunicator = new Communicator();
-        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT + "users/", "get");
+        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new StringHandler() {
+            @Override
+            public void accept(String res) {
+
+            }
+        });
+
     }
 
     @Override

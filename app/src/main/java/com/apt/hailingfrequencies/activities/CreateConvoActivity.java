@@ -25,8 +25,6 @@ import java.util.List;
 
 public class CreateConvoActivity extends BaseActivity {
 
-    private String mUsername;
-
     private DatabaseReference mConversationDatabaseReference;
     private DatabaseReference mConvMessagesDatabaseReference;
     private DatabaseReference mConvUsersDatabaseReference;
@@ -35,8 +33,6 @@ public class CreateConvoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_convo);
-
-        mUsername = ANONYMOUS;
 
         // Initialize Firebase components
         mConversationDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Conversation");
