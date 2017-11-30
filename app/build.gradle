@@ -36,5 +36,11 @@ dependencies {
     // FirebaseUI for Firebase Auth
     compile 'com.firebaseui:firebase-ui-auth:3.1.0'
 
+    // Volley HTTP
+    compile 'com.android.volley:volley:1.0.0'
+
+    //Async HTTP
+    compile 'com.loopj.android:android-async-http:1.4.9'
+
 }
 apply plugin: 'com.google.gms.google-services'

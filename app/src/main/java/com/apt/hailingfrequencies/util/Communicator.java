@@ -1,0 +1,99 @@
+package com.apt.hailingfrequencies.util;
+
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import cz.msebera.android.httpclient.Header;
+
+public class Communicator {
+    public static final String PUT = "put";
+    public static final String GET = "get";
+
+    public void getTokenAndPerformHTTPRequest(final String URL, final String VERB) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Task task = user.getIdToken(true);
+
+        task.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            @Override
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()) {
+                    String idToken = task.getResult().getToken();
+                    Log.v("MY TOKEN", idToken);
+                    // Send token to your backend via HTTPS
+                    HTTPRequest(idToken, URL, VERB);
+                } else {
+                    // Handle error -> task.getException();
+                    Exception exception = task.getException();
+                }
+            }
+        });
+    }
+
+    // Using Android Async Http Client
+    // https://github.com/codepath/android_guides/wiki/Using-Android-Async-Http-Client
+    public void HTTPRequest(String token, String url, String verb) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        client.addHeader("Authorization", "Bearer " + token);
+
+        // GET
+        if (verb == GET) {
+            client.get(url, params, new TextHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String res) {
+                            // called when response HTTP status is "200 OK"
+                            Log.v("RESPONSE", res);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                            Log.v("FAILURE", res);
+                        }
+                    }
+            );
+        }
+
+        // PUT
+        else if (verb == PUT) {
+            client.put(url, params, new TextHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String res) {
+                            // called when response HTTP status is "200 OK"
+                            Log.v("RESPONSE", res);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                            Log.v("FAILURE", res);
+                        }
+                    }
+            );
+        }
+
+        else {
+            Log.e("error", "verb isn't 'put' or 'get'");
+        }
+
+
+    }
+
+}

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
+import com.apt.hailingfrequencies.util.Communicator;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,20 +20,18 @@ import java.util.Arrays;
 
 public class MainActivity extends BaseActivity {
 
-    private String mUsername;
-    private String mIdToken;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set username to ANONYMOUS
-        mUsername = ANONYMOUS;
-
         // Firebase Auth State Listener
         createFirebaseAuthListener();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        Communicator myCommunicator = new Communicator();
+        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT + "users/", "get");
     }
 
     @Override
