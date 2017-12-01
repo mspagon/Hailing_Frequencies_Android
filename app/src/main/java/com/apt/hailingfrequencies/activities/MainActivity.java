@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.util.Communicator;
-import com.apt.hailingfrequencies.util.StringHandler;
+import com.apt.hailingfrequencies.util.ResponseHandler;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,10 +32,10 @@ public class MainActivity extends BaseActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Communicator myCommunicator = new Communicator();
-        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new StringHandler() {
+        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new ResponseHandler() {
             @Override
             public void accept(String res) {
-
+                Log.v("THIS IS MY CUSTOM DEF", res);
             }
         });
 
