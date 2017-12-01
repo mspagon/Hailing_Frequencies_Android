@@ -9,31 +9,20 @@ import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.models.Conversation;
-import com.apt.hailingfrequencies.models.ConversationResponse;
 import com.apt.hailingfrequencies.util.Communicator;
 import com.apt.hailingfrequencies.util.ConversationsAdapter;
 import com.apt.hailingfrequencies.util.ResponseHandler;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    private ListView mListView;
-    private ArrayList<Conversation> mConversationList = new ArrayList<Conversation>();
+    private ListView mConversationListView;
+    private ConversationsAdapter mConversationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,79 +32,45 @@ public class MainActivity extends BaseActivity {
         // Firebase Auth State Listener
         createFirebaseAuthListener();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // Initialize references to views
+        mConversationListView = (ListView) findViewById(R.id.conversation_list_view);
 
-        mListView = (ListView) findViewById(R.id.conversation_list_view);
+        // Initialize message ListView and its adapter
+        ArrayList<Conversation> conversationList = new ArrayList<Conversation>();
+        mConversationsAdapter = new ConversationsAdapter(MainActivity.this, conversationList);
+        mConversationListView.setAdapter(mConversationsAdapter);
 
         Communicator myCommunicator = new Communicator();
+
         myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new ResponseHandler() {
             @Override
             public void accept(String res) {
                 Log.v("HTTP RESPONSE", res);
-                populate(res);
 
-//                try {
-//                    JSONObject jObject = new JSONObject(res);
-//                    JSONArray jArray = jObject.getJSONArray("conversations");
-//
-//                    ArrayList<Conversation> conversationList = new ArrayList<Conversation>();
-//
-//                    // For each conversation JSONObject returned
-//                    for(int i = 0; i < jArray.length(); i++) {
-//                        JSONObject conversationJSON = jArray.getJSONObject(i);
-//
-//                        Conversation singleConversation = new Conversation();
-//                        singleConversation.setDestroyDate(conversationJSON.getString("destroyDate"));
-//                        singleConversation.setId(conversationJSON.getInt("id"));
-//                        singleConversation.setName(conversationJSON.getString("name"));
-//
-//                        conversationList.add(singleConversation);
-//                        Log.v("STATUS", jArray.getString(i));
-//                    }
-//
-//                    // Create the adapter to convert the array to views
-//                    ConversationsAdapter adapter = new ConversationsAdapter(MainActivity.this, conversationList);
-//
-//                    // Attach the adapter to a ListView
-//                    ListView listView = (ListView) findViewById(R.id.conversation_list_view);
-//                    listView.setAdapter(adapter);
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    JSONObject jObject = new JSONObject(res);
+                    JSONArray jArray = jObject.getJSONArray("conversations");
+
+                    // For each conversation JSONObject returned
+                    for(int i = 0; i < jArray.length(); i++) {
+                        JSONObject conversationJSON = jArray.getJSONObject(i);
+
+                        Conversation singleConversation = new Conversation();
+                        singleConversation.setDestroyDate(conversationJSON.getString("destroyDate"));
+                        singleConversation.setId(conversationJSON.getInt("id"));
+                        singleConversation.setName(conversationJSON.getString("name"));
+
+                        mConversationsAdapter.add(singleConversation);
+                        Log.v("STATUS", jArray.getString(i));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
-    }
 
-    public void populate(String res) {
-
-        try {
-            JSONObject jObject = new JSONObject(res);
-            JSONArray jArray = jObject.getJSONArray("conversations");
-
-            // For each conversation JSONObject returned
-            for(int i = 0; i < jArray.length(); i++) {
-                JSONObject conversationJSON = jArray.getJSONObject(i);
-
-                Conversation singleConversation = new Conversation();
-                singleConversation.setDestroyDate(conversationJSON.getString("destroyDate"));
-                singleConversation.setId(conversationJSON.getInt("id"));
-                singleConversation.setName(conversationJSON.getString("name"));
-
-                mConversationList.add(singleConversation);
-                Log.v("STATUS", jArray.getString(i));
-            }
-
-            // Create the adapter to convert the array to views
-            ConversationsAdapter adapter = new ConversationsAdapter(MainActivity.this, mConversationList);
-
-            // Attach the adapter to a ListView
-            ListView listView = (ListView) findViewById(R.id.conversation_list_view);
-            listView.setAdapter(adapter);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //TODO ADD A CONVERSATIONS DATABASE LISTENER FOR REALTIME UPDATES
 
     }
 
