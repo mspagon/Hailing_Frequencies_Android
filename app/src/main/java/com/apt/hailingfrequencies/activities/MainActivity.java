@@ -1,9 +1,10 @@
 package com.apt.hailingfrequencies.activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,7 +52,7 @@ public class MainActivity extends BaseActivity {
                     JSONObject jObject = new JSONObject(res);
                     JSONArray jArray = jObject.getJSONArray("conversations");
 
-                    // For each conversation JSONObject returned
+                    // For each conversation JSONObject returned create an object and add to adapter
                     for(int i = 0; i < jArray.length(); i++) {
                         JSONObject conversationJSON = jArray.getJSONObject(i);
 
@@ -60,6 +61,9 @@ public class MainActivity extends BaseActivity {
                         singleConversation.setId(conversationJSON.getInt("id"));
                         singleConversation.setName(conversationJSON.getString("name"));
 
+                        //TODO ASK PROFESSOR
+                        //Why can we add to adapter but not conversation list?
+                        //conversationList.add(singleConversation);
                         mConversationsAdapter.add(singleConversation);
                         Log.v("STATUS", jArray.getString(i));
                     }
@@ -71,6 +75,19 @@ public class MainActivity extends BaseActivity {
         });
 
         //TODO ADD A CONVERSATIONS DATABASE LISTENER FOR REALTIME UPDATES
+
+
+        // Click listener for listView
+        mConversationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Conversation conversation = mConversationsAdapter.getItem(position);
+                Log.v("TAP", conversation.getName());
+            }
+        });
+
+
+
 
     }
 
