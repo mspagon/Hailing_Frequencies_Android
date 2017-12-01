@@ -1,45 +1,42 @@
 package com.apt.hailingfrequencies.models;
 
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Date;
 
 public class Conversation {
-    private String title;
-    private User admin;
-    private Message lastMessage;
+    private String destroyDate;
+    private int id;
+    private String name;
+
+    public Conversation(String destroyDate, int id, String name) {
+        this.destroyDate = destroyDate;
+        this.id = id;
+        this.name = name;
+    }
 
     public Conversation() {
-        // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Conversation(String title, User admin) {
-        this.title = title;
-        this.admin = admin;
-        this.lastMessage = null;
+    public String getDestroyDate() {
+        return destroyDate;
     }
 
-    public String getTitle() {
-        return title;
+    public void setDestroyDate(String destroyDate) {
+        this.destroyDate = destroyDate;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public int getId() {
+        return id;
     }
 
-    public User getAdmin() {
-        return admin;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setAdmin(User admin) {
-        this.admin = admin;
+    public String getName() {
+        return name;
     }
 
-    public Message getLastMessage() {
-        return lastMessage;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public void setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
-    }
-
 }

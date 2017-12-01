@@ -2,8 +2,6 @@ package com.apt.hailingfrequencies.activities;
 
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.models.Conversation;
-import com.apt.hailingfrequencies.models.Message;
-import com.apt.hailingfrequencies.models.User;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

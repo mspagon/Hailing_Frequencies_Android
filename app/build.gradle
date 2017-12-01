@@ -42,5 +42,8 @@ dependencies {
     //Async HTTP
     compile 'com.loopj.android:android-async-http:1.4.9'
 
+    //GSON Parser
+    compile 'com.google.code.gson:gson:2.4'
+
 }
 apply plugin: 'com.google.gms.google-services'

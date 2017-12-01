@@ -29,7 +29,7 @@ public class Communicator {
             public void onComplete(@NonNull Task<GetTokenResult> task) {
                 if (task.isSuccessful()) {
                     String idToken = task.getResult().getToken();
-                    Log.v("MY TOKEN", idToken);
+                    // Log.v("MY TOKEN", idToken);
                     // Send token to your backend via HTTPS
                     HTTPRequest(idToken, URL, VERB, HANDLER);
                 } else {
