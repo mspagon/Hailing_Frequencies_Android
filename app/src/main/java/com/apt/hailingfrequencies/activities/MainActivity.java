@@ -1,134 +1,69 @@
 package com.apt.hailingfrequencies.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
-import com.apt.hailingfrequencies.models.Conversation;
-import com.apt.hailingfrequencies.util.Communicator;
-import com.apt.hailingfrequencies.util.ConversationsAdapter;
-import com.apt.hailingfrequencies.util.ResponseHandler;
+import com.apt.hailingfrequencies.util.MessageAdapter;
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
-import com.loopj.android.http.RequestParams;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends BaseActivity {
-    private ListView mConversationListView;
-    private ConversationsAdapter mConversationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Firebase Auth State Listener
-        createFirebaseAuthListener();
+        //createFirebaseAuthListener();
 
-        // Initialize references to views
-        mConversationListView = (ListView) findViewById(R.id.conversation_list_view);
+        final Button button = findViewById(R.id.button_start);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
 
-        // Initialize message ListView and its adapter
-        ArrayList<Conversation> conversationList = new ArrayList<Conversation>();
-        mConversationsAdapter = new ConversationsAdapter(MainActivity.this, conversationList);
-        mConversationListView.setAdapter(mConversationsAdapter);
-
-        Communicator myCommunicator = new Communicator();
-        RequestParams emptyParams = new RequestParams();
-
-        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, emptyParams, "get", new ResponseHandler() {
-            @Override
-            public void accept(String res) {
-                Log.v("HTTP RESPONSE", res);
-
-                try {
-                    JSONObject jObject = new JSONObject(res);
-                    JSONArray jArray = jObject.getJSONArray("conversations");
-
-                    // For each conversation JSONObject returned create an object and add to adapter
-                    for(int i = 0; i < jArray.length(); i++) {
-                        Log.v("STATUS", jArray.getString(i));
-
-                        JSONObject conversationJSON = jArray.getJSONObject(i);
-
-                        Conversation singleConversation = new Conversation();
-                        singleConversation.setDestroyDate(conversationJSON.getString("destroyDate"));
-                        singleConversation.setId(conversationJSON.getString("id"));
-                        singleConversation.setName(conversationJSON.getString("name"));
-
-                        //TODO ASK PROFESSOR
-                        //Why can we add to adapter but not conversation list?
-                        //conversationList.add(singleConversation);
-                        mConversationsAdapter.add(singleConversation);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        //TODO ADD A CONVERSATIONS DATABASE LISTENER FOR REALTIME UPDATES
-
-
-        // Click listener for listView
-        mConversationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Conversation conversation = mConversationsAdapter.getItem(position);
-                Log.v("TAP", conversation.getName() + " - " + conversation.getId());
-
-                // Get conversation id from adapter
-                String conversationId = conversation.getId();
-
-                // Start conversation activity and pass conversation Id
-                Intent intent = new Intent(getBaseContext(), ConversationActivity.class);
-                intent.putExtra("id", conversationId);
+                Intent intent = new Intent(MainActivity.this, ConversationListActivity.class);
                 startActivity(intent);
             }
         });
+    }
 
 
 
+    @Override
+    void onSignedInInitialize() {
 
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(MainActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(MainActivity.this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
+    void onSignedOutCleanup() {
+
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        // Remove auth state listener.
-        if (getAuthStateListener() != null) {
-            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
-        }
-    }
-
-    @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        // Attach auth state listener.
-        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
 
 }

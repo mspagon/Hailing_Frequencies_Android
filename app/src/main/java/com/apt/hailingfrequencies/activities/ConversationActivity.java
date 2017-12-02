@@ -129,8 +129,8 @@ public class ConversationActivity extends BaseActivity {
 
                 // post messageText to API along with USER ALIAS
                 //POST A MESSAGE
-//                String POST_MESSAGE_URL = "http://hailing-frequencies-2017.appspot.com/api/conversations/" + mConversationId + "/messages/";
-                String POST_MESSAGE_URL = "http://httpbin.org/post";
+                String POST_MESSAGE_URL = "http://hailing-frequencies-2017.appspot.com/api/conversations/" + mConversationId + "/messages/";
+                // String POST_MESSAGE_URL = "http://httpbin.org/post";
                 Communicator postMessageCommunicator = new Communicator();
                 RequestParams messageParams = new RequestParams();
                 messageParams.add("text", messageText);
@@ -193,16 +193,6 @@ public class ConversationActivity extends BaseActivity {
 
         //TODO ADD A CONVERSATIONS DATABASE LISTENER FOR REALTIME UPDATES
 
-//        //Join conversation
-//        String JOIN_URL = "http://hailing-frequencies-2017.appspot.com/api/conversations/" + mConversationId + "/users/";
-//        Log.v("TEST URL", JOIN_URL);
-//        myCommunicator.getTokenAndPerformHTTPRequest(JOIN_URL, "post", new ResponseHandler() {
-//            @Override
-//            public void accept(String res) {
-//                Log.v("HTTP RESPONSE", res);
-//
-//            }
-//        });
 
 
         //GET USER INFORMATION
@@ -224,21 +214,6 @@ public class ConversationActivity extends BaseActivity {
             }
         });
 }
-
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(ConversationActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(ConversationActivity.this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
 
     @Override
     protected void onPause() {
@@ -290,5 +265,16 @@ public class ConversationActivity extends BaseActivity {
             mMessagesDatabaseReference.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
+    }
+
+    @Override
+    void onSignedInInitialize() {
+        attachDatabaseReadListener();
+    }
+
+    @Override
+    void onSignedOutCleanup() {
+        mMessageAdapter.clear();
+        detachDatabaseReadListener();
     }
 }

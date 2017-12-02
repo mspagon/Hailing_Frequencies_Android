@@ -5,15 +5,17 @@
 
     <TextView
         android:id="@+id/message_alias"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="2dp"
         android:text="User Alias"
-        android:textSize="24sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/message_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Message Text"
-        android:textSize="18sp" />
+        android:gravity="right"
+        android:textSize="16sp" />
 </LinearLayout>

@@ -1,10 +1,12 @@
 package com.apt.hailingfrequencies.activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
 import com.firebase.ui.auth.AuthUI;
@@ -20,7 +22,7 @@ import java.util.Arrays;
 // Base class inspired by
 // https://stackoverflow.com/questions/3270206/same-option-menu-in-all-activities-in-android/3270254#3270254
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     // Request Code
     public static final int RC_SIGN_IN = 1;
     public static final String ANONYMOUS = "anonymous";
@@ -50,7 +52,7 @@ public class BaseActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // user is signed in
-                    onSignedInInitialize(user);
+                    onSignedInInitialize();
                 } else {
                     // user is signed out
                     onSignedOutCleanup();
@@ -69,14 +71,22 @@ public class BaseActivity extends AppCompatActivity {
         };
     }
 
-    private void onSignedInInitialize(FirebaseUser user) {
-        // Get information about user
-        mUsername = user.getDisplayName();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
-    private void onSignedOutCleanup() {
-        mUsername = ANONYMOUS;
-    }
+    abstract void onSignedInInitialize();
+
+    abstract void onSignedOutCleanup();
 
 
     // Populate the menu bar

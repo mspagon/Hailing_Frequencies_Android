@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.models.Conversation;
 import com.apt.hailingfrequencies.models.Message;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;

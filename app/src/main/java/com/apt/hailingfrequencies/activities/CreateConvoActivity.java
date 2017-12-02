@@ -95,15 +95,12 @@ public class CreateConvoActivity extends BaseActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(CreateConvoActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(CreateConvoActivity.this, "Sign in cancelled!", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
+    void onSignedInInitialize() {
+
+    }
+
+    @Override
+    void onSignedOutCleanup() {
+
     }
 }

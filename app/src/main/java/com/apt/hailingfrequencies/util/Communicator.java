@@ -23,7 +23,7 @@ public class Communicator {
 
     public void getTokenAndPerformHTTPRequest(final String URL, final RequestParams PARAMS, final String VERB, final ResponseHandler HANDLER) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Task task = user.getIdToken(true);
+        Task task = user.getIdToken(false);
 
         task.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             @Override
@@ -75,7 +75,7 @@ public class Communicator {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, String res) {
                             // called when response HTTP status is "200 OK"
-                            Log.v("RESPONSE", res);
+                            handler.accept(res);
                         }
 
                         @Override
@@ -93,7 +93,7 @@ public class Communicator {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, String res) {
                             // called when response HTTP status is "200 OK"
-                            Log.v("RESPONSE", res);
+                            handler.accept(res);
                         }
 
                         @Override
