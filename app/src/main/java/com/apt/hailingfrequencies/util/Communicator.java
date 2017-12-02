@@ -19,8 +19,9 @@ import cz.msebera.android.httpclient.Header;
 public class Communicator {
     public static final String PUT = "put";
     public static final String GET = "get";
+    public static final String POST = "post";
 
-    public void getTokenAndPerformHTTPRequest(final String URL, final String VERB, final ResponseHandler HANDLER) {
+    public void getTokenAndPerformHTTPRequest(final String URL, final RequestParams PARAMS, final String VERB, final ResponseHandler HANDLER) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Task task = user.getIdToken(true);
 
@@ -31,7 +32,7 @@ public class Communicator {
                     String idToken = task.getResult().getToken();
                     // Log.v("MY TOKEN", idToken);
                     // Send token to your backend via HTTPS
-                    HTTPRequest(idToken, URL, VERB, HANDLER);
+                    HTTPRequest(idToken, URL, PARAMS, VERB, HANDLER);
                 } else {
                     // Handle error -> task.getException();
                     Exception exception = task.getException();
@@ -46,9 +47,8 @@ public class Communicator {
     // Pass an abstract class ResponseHandler
     // This allows for custom handling of each response
     // for each unique API Endpoint.
-    public void HTTPRequest(String token, String url, String verb, final ResponseHandler handler) {
+    public void HTTPRequest(String token, String url, RequestParams params, String verb, final ResponseHandler handler) {
         AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
         client.addHeader("Authorization", "Bearer " + token);
 
         // GET
@@ -87,8 +87,26 @@ public class Communicator {
             );
         }
 
+        // POST
+        else if (verb == POST) {
+            client.post(url, params, new TextHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, String res) {
+                            // called when response HTTP status is "200 OK"
+                            Log.v("RESPONSE", res);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String res, Throwable t) {
+                            // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                            Log.v("FAILURE", res);
+                        }
+                    }
+            );
+        }
+
         else {
-            Log.e("error", "verb isn't 'put' or 'get'");
+            Log.e("error", "verb isn't 'put', 'post', or 'get'");
         }
 
 

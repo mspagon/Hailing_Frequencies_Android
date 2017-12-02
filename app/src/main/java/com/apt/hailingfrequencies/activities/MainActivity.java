@@ -14,6 +14,7 @@ import com.apt.hailingfrequencies.util.Communicator;
 import com.apt.hailingfrequencies.util.ConversationsAdapter;
 import com.apt.hailingfrequencies.util.ResponseHandler;
 import com.google.firebase.auth.FirebaseAuth;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +43,9 @@ public class MainActivity extends BaseActivity {
         mConversationListView.setAdapter(mConversationsAdapter);
 
         Communicator myCommunicator = new Communicator();
+        RequestParams emptyParams = new RequestParams();
 
-        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new ResponseHandler() {
+        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, emptyParams, "get", new ResponseHandler() {
             @Override
             public void accept(String res) {
                 Log.v("HTTP RESPONSE", res);

@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,7 @@ import java.util.List;
 public class ConversationActivity extends BaseActivity {
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
+    private String mUserId;
     private String mAlias;
 
     private ListView mMessageListView;
@@ -67,6 +69,7 @@ public class ConversationActivity extends BaseActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages").child(mConversationId);
 
+
         //TODO set user alias?
         mAlias = "userAlias";
 
@@ -78,8 +81,8 @@ public class ConversationActivity extends BaseActivity {
         mSendButton = (Button) findViewById(R.id.sendButton);
 
         // Initialize message ListView and its adapter
-        List<Message> messageList = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, messageList);
+        ArrayList<Message> messageList = new ArrayList<Message>();
+        mMessageAdapter = new MessageAdapter(this, messageList);
         mMessageListView.setAdapter(mMessageAdapter);
 
         // Initialize progress bar
@@ -125,6 +128,19 @@ public class ConversationActivity extends BaseActivity {
                 Log.v("SEND MESSAGE", messageText);
 
                 // post messageText to API along with USER ALIAS
+                //POST A MESSAGE
+//                String POST_MESSAGE_URL = "http://hailing-frequencies-2017.appspot.com/api/conversations/" + mConversationId + "/messages/";
+                String POST_MESSAGE_URL = "http://httpbin.org/post";
+                Communicator postMessageCommunicator = new Communicator();
+                RequestParams messageParams = new RequestParams();
+                messageParams.add("text", messageText);
+                messageParams.add("media_url", "");
+                postMessageCommunicator.getTokenAndPerformHTTPRequest(POST_MESSAGE_URL, messageParams, "post", new ResponseHandler() {
+                    @Override
+                    public void accept(String res) {
+                        Log.v("XYZ", res);
+                    }
+                });
 
                 // Clear input box
                 mMessageEditText.setText("");
@@ -138,7 +154,9 @@ public class ConversationActivity extends BaseActivity {
         String URL = ENDPOINT_CONVERSATIONS + mConversationId + "/messages/";
         Log.v("URL", URL);
 
-        myCommunicator.getTokenAndPerformHTTPRequest(URL, "get", new ResponseHandler() {
+        RequestParams emptyParams = new RequestParams();
+
+        myCommunicator.getTokenAndPerformHTTPRequest(URL, emptyParams, "get", new ResponseHandler() {
             @Override
             public void accept(String res) {
                 Log.v("HTTP RESPONSE", res);
@@ -148,7 +166,7 @@ public class ConversationActivity extends BaseActivity {
                     JSONArray jArray = jObject.getJSONArray("messages");
 
                     // For each conversation JSONObject returned create an object and add to adapter
-                    for(int i = 0; i < jArray.length(); i++) {
+                    for (int i = 0; i < jArray.length(); i++) {
                         // Log.v("STATUS", jArray.getString(i));
 
                         JSONObject messageJSON = jArray.getJSONObject(i);
@@ -175,7 +193,39 @@ public class ConversationActivity extends BaseActivity {
 
         //TODO ADD A CONVERSATIONS DATABASE LISTENER FOR REALTIME UPDATES
 
-    }
+//        //Join conversation
+//        String JOIN_URL = "http://hailing-frequencies-2017.appspot.com/api/conversations/" + mConversationId + "/users/";
+//        Log.v("TEST URL", JOIN_URL);
+//        myCommunicator.getTokenAndPerformHTTPRequest(JOIN_URL, "post", new ResponseHandler() {
+//            @Override
+//            public void accept(String res) {
+//                Log.v("HTTP RESPONSE", res);
+//
+//            }
+//        });
+
+
+        //GET USER INFORMATION
+        String USER_URL = "http://hailing-frequencies-2017.appspot.com/api/users/";
+        myCommunicator.getTokenAndPerformHTTPRequest(USER_URL, emptyParams, "get", new ResponseHandler() {
+            @Override
+            public void accept(String res) {
+                Log.v("USER RESPONSE", res);
+
+                try {
+                    JSONObject jObject = new JSONObject(res);
+                    mUserId = jObject.getJSONObject("user").get("id").toString();
+
+                    Log.v("USER ID", mUserId);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+}
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
