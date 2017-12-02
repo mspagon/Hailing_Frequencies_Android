@@ -47,7 +47,7 @@ public class ConversationActivity extends BaseActivity {
 
                     // For each conversation JSONObject returned create an object and add to adapter
                     for(int i = 0; i < jArray.length(); i++) {
-                        Log.v("STATUS", jArray.getString(i));
+                        // Log.v("STATUS", jArray.getString(i));
 
                         JSONObject messageJSON = jArray.getJSONObject(i);
 
@@ -57,7 +57,9 @@ public class ConversationActivity extends BaseActivity {
                         singleMessage.setPostDate(messageJSON.getString("postDate"));
                         singleMessage.setText(messageJSON.getString("text"));
 
-                        
+                        Log.v("Message", singleMessage.toString());
+
+
                     }
 
                 } catch (JSONException e) {
