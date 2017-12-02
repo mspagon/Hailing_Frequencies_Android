@@ -10,10 +10,11 @@ import android.widget.TextView;
 
 import com.apt.hailingfrequencies.R;
 import com.apt.hailingfrequencies.models.Message;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class MessageAdapter extends ArrayAdapter<Message> {{
+public class MessageAdapter extends ArrayAdapter<Message> {
     public MessageAdapter(Context context, int resource, List<Message> objects) {
         super(context, resource, objects);
     }
@@ -28,23 +29,24 @@ public class MessageAdapter extends ArrayAdapter<Message> {{
         TextView messageTextView = (TextView) convertView.findViewById(R.id.messageTextView);
         TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
-        FriendlyMessage message = getItem(position);
+        Message message = getItem(position);
 
-        boolean isPhoto = message.getPhotoUrl() != null;
+        boolean isPhoto = message.getMediaURL() != null;
         if (isPhoto) {
             messageTextView.setVisibility(View.GONE);
             photoImageView.setVisibility(View.VISIBLE);
             Glide.with(photoImageView.getContext())
-                    .load(message.getPhotoUrl())
+                    .load(message.getMediaURL())
                     .into(photoImageView);
         } else {
             messageTextView.setVisibility(View.VISIBLE);
             photoImageView.setVisibility(View.GONE);
             messageTextView.setText(message.getText());
         }
-        authorTextView.setText(message.getName());
+        authorTextView.setText(message.getText());
 
         return convertView;
     }
-}
+
+
 }
