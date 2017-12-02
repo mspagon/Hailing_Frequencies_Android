@@ -23,14 +23,14 @@ public class Communicator {
 
     public void getTokenAndPerformHTTPRequest(final String URL, final RequestParams PARAMS, final String VERB, final ResponseHandler HANDLER) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Task task = user.getIdToken(false);
+        Task task = user.getIdToken(true);
 
         task.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
             @Override
             public void onComplete(@NonNull Task<GetTokenResult> task) {
                 if (task.isSuccessful()) {
                     String idToken = task.getResult().getToken();
-                    // Log.v("MY TOKEN", idToken);
+                    Log.v("MY TOKEN", idToken);
                     // Send token to your backend via HTTPS
                     HTTPRequest(idToken, URL, PARAMS, VERB, HANDLER);
                 } else {

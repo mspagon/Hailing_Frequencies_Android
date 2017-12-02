@@ -37,6 +37,28 @@ public class ConversationListActivity extends BaseActivity {
         // Initialize references to views
         mConversationListView = (ListView) findViewById(R.id.conversation_list_view);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove auth state listener.
+        if (getAuthStateListener() != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
+        }
+        mConversationsAdapter.clear();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Attach auth state listener.
+        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
+    }
+
+    @Override
+    void onSignedInInitialize() {
+
         // Initialize message ListView and its adapter
         ArrayList<Conversation> conversationList = new ArrayList<Conversation>();
         mConversationsAdapter = new ConversationsAdapter(ConversationListActivity.this, conversationList);
@@ -108,30 +130,6 @@ public class ConversationListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Remove auth state listener.
-        if (getAuthStateListener() != null) {
-            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Attach auth state listener.
-        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
-    }
-
-    @Override
-    void onSignedInInitialize() {
 
     }
 
