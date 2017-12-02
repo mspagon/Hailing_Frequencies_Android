@@ -4,10 +4,10 @@ import java.util.Date;
 
 public class Conversation {
     private String destroyDate;
-    private int id;
+    private String id;
     private String name;
 
-    public Conversation(String destroyDate, int id, String name) {
+    public Conversation(String destroyDate, String id, String name) {
         this.destroyDate = destroyDate;
         this.id = id;
         this.name = name;
@@ -24,11 +24,11 @@ public class Conversation {
         this.destroyDate = destroyDate;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

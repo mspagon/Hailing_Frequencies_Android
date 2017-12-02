@@ -54,18 +54,19 @@ public class MainActivity extends BaseActivity {
 
                     // For each conversation JSONObject returned create an object and add to adapter
                     for(int i = 0; i < jArray.length(); i++) {
+                        Log.v("STATUS", jArray.getString(i));
+
                         JSONObject conversationJSON = jArray.getJSONObject(i);
 
                         Conversation singleConversation = new Conversation();
                         singleConversation.setDestroyDate(conversationJSON.getString("destroyDate"));
-                        singleConversation.setId(conversationJSON.getInt("id"));
+                        singleConversation.setId(conversationJSON.getString("id"));
                         singleConversation.setName(conversationJSON.getString("name"));
 
                         //TODO ASK PROFESSOR
                         //Why can we add to adapter but not conversation list?
                         //conversationList.add(singleConversation);
                         mConversationsAdapter.add(singleConversation);
-                        Log.v("STATUS", jArray.getString(i));
                     }
 
                 } catch (JSONException e) {
@@ -82,7 +83,15 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Conversation conversation = mConversationsAdapter.getItem(position);
-                Log.v("TAP", conversation.getName());
+                Log.v("TAP", conversation.getName() + " - " + conversation.getId());
+
+                // Get conversation id from adapter
+                String conversationId = conversation.getId();
+
+                // Start conversation activity and pass conversation Id
+                Intent intent = new Intent(getBaseContext(), ConversationActivity.class);
+                intent.putExtra("id", conversationId);
+                startActivity(intent);
             }
         });
 

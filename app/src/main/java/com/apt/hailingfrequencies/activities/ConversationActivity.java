@@ -6,12 +6,19 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.apt.hailingfrequencies.R;
+import com.apt.hailingfrequencies.models.Conversation;
+import com.apt.hailingfrequencies.models.Message;
 import com.apt.hailingfrequencies.util.Communicator;
 import com.apt.hailingfrequencies.util.ResponseHandler;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class ConversationActivity extends BaseActivity {
+    private String mConversationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +28,41 @@ public class ConversationActivity extends BaseActivity {
         // Firebase Auth State Listener
         createFirebaseAuthListener();
 
+        // get conversation extra from intent
+        mConversationId = getIntent().getStringExtra("id");
+
         Communicator myCommunicator = new Communicator();
 
-        myCommunicator.getTokenAndPerformHTTPRequest(ENDPOINT_CONVERSATIONS, "get", new ResponseHandler() {
+        String URL = ENDPOINT_CONVERSATIONS + mConversationId + "/messages/";
+        Log.v("URL", URL);
+
+        myCommunicator.getTokenAndPerformHTTPRequest(URL, "get", new ResponseHandler() {
             @Override
             public void accept(String res) {
                 Log.v("HTTP RESPONSE", res);
+
+                try {
+                    JSONObject jObject = new JSONObject(res);
+                    JSONArray jArray = jObject.getJSONArray("messages");
+
+                    // For each conversation JSONObject returned create an object and add to adapter
+                    for(int i = 0; i < jArray.length(); i++) {
+                        Log.v("STATUS", jArray.getString(i));
+
+                        JSONObject messageJSON = jArray.getJSONObject(i);
+
+                        Message singleMessage = new Message();
+                        singleMessage.setUserAlias(messageJSON.getString("userAlias"));
+                        singleMessage.setMediaURL(messageJSON.getString("mediaURL"));
+                        singleMessage.setPostDate(messageJSON.getString("postDate"));
+                        singleMessage.setText(messageJSON.getString("text"));
+
+                        
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
