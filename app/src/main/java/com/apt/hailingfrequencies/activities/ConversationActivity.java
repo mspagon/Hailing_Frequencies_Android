@@ -118,6 +118,65 @@ public class ConversationActivity extends BaseActivity {
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
 
+
+}
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Remove auth state listener.
+        if (getAuthStateListener() != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Attach auth state listener.
+        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
+    }
+
+    private void attachDatabaseReadListener() {
+        if (mChildEventListener == null) {
+            mChildEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Message Message = dataSnapshot.getValue(Message.class);
+                    mMessageAdapter.add(Message);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            };
+            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        }
+    }
+
+    private void detachDatabaseReadListener() {
+        if (mChildEventListener != null) {
+            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
+            mChildEventListener = null;
+        }
+    }
+
+    @Override
+    void onSignedInInitialize() {
+        attachDatabaseReadListener();
+
         // Send button sends a message and clears the EditText
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,63 +272,7 @@ public class ConversationActivity extends BaseActivity {
                 }
             }
         });
-}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Remove auth state listener.
-        if (getAuthStateListener() != null) {
-            FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Attach auth state listener.
-        FirebaseAuth.getInstance().addAuthStateListener(getAuthStateListener());
-    }
-
-    private void attachDatabaseReadListener() {
-        if (mChildEventListener == null) {
-            mChildEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    Message Message = dataSnapshot.getValue(Message.class);
-                    mMessageAdapter.add(Message);
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            };
-            mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-        }
-    }
-
-    private void detachDatabaseReadListener() {
-        if (mChildEventListener != null) {
-            mMessagesDatabaseReference.removeEventListener(mChildEventListener);
-            mChildEventListener = null;
-        }
-    }
-
-    @Override
-    void onSignedInInitialize() {
-        attachDatabaseReadListener();
     }
 
     @Override

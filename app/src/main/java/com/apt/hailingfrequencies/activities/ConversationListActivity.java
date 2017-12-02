@@ -46,7 +46,7 @@ public class ConversationListActivity extends BaseActivity {
         if (getAuthStateListener() != null) {
             FirebaseAuth.getInstance().removeAuthStateListener(getAuthStateListener());
         }
-        mConversationsAdapter.clear();
+//        mConversationsAdapter.clear();
     }
 
     @Override
@@ -135,6 +135,6 @@ public class ConversationListActivity extends BaseActivity {
 
     @Override
     void onSignedOutCleanup() {
-        mConversationsAdapter.clear();
+//        mConversationsAdapter.clear();
     }
 }
